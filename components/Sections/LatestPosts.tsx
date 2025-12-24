@@ -1,17 +1,17 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BlogCard } from '../UI/BlogCard';
 import { Button } from '../UI/Button';
-import { Page, BlogPost } from '../../types';
+import { BlogPost } from '../../types';
 
 interface LatestPostsProps {
   posts: BlogPost[];
   loading: boolean;
-  onNavigate?: (page: Page) => void;
-  onPostClick?: (postId: string) => void;
 }
 
-export const LatestPosts: React.FC<LatestPostsProps> = ({ posts, loading, onNavigate, onPostClick }) => {
+export const LatestPosts: React.FC<LatestPostsProps> = ({ posts, loading }) => {
+  const navigate = useNavigate();
   return (
     <section className="py-24 bg-white dark:bg-custom-darkBg transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,7 +20,7 @@ export const LatestPosts: React.FC<LatestPostsProps> = ({ posts, loading, onNavi
           <Button 
             variant="ghost" 
             className="hidden sm:inline-flex"
-            onClick={() => onNavigate && onNavigate('blog')}
+            onClick={() => navigate('/blogs')}
           >
             View Archive
           </Button>
@@ -39,7 +39,7 @@ export const LatestPosts: React.FC<LatestPostsProps> = ({ posts, loading, onNavi
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
             {posts.map((post) => (
-              <BlogCard key={post.id} post={post} onClick={onPostClick} />
+              <BlogCard key={post.id} post={post} />
             ))}
           </div>
         )}
@@ -48,7 +48,7 @@ export const LatestPosts: React.FC<LatestPostsProps> = ({ posts, loading, onNavi
            <Button 
              variant="outline" 
              fullWidth
-             onClick={() => onNavigate && onNavigate('blog')}
+               onClick={() => navigate('/blogs')}
            >
              View Archive
            </Button>

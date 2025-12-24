@@ -1,17 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { Button } from '../UI/Button';
 import { Page } from '../../types';
 
-interface HeaderProps {
-  currentPage: Page;
-  onNavigate: (page: Page, category?: string) => void;
-  onSubscribe: () => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate, onSubscribe }) => {
+export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -56,7 +50,11 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate, onSubsc
   ];
 
   const handleNavClick = (page: Page) => {
-    onNavigate(page);
+    if (page === 'home') {
+      navigate('/');
+    } else {
+      navigate(`/${page}`);
+    }
     setIsMobileMenuOpen(false);
     // Scroll handled by ScrollToTop component, but smooth scroll here for immediate feedback
     if (location.pathname !== (page === 'home' ? '/' : `/${page}`)) {
@@ -65,7 +63,20 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate, onSubsc
   };
 
   const handleSubscribeClick = () => {
-    onSubscribe();
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const newsletterSection = document.getElementById('newsletter');
+        if (newsletterSection) {
+          newsletterSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const newsletterSection = document.getElementById('newsletter');
+      if (newsletterSection) {
+        newsletterSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
     setIsMobileMenuOpen(false);
   };
 
@@ -90,18 +101,21 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate, onSubsc
             {/* Desktop Nav */}
             <nav className="hidden md:flex space-x-10 items-center">
               {navLinks.map((link, index) => (
-                <button
+                <NavLink
                   key={`${link.name}-${index}`}
-                  onClick={() => handleNavClick(link.page)}
-                  className={`text-sm font-medium transition-all duration-300 relative group ${
-                    currentPage === link.page
-                    ? 'text-custom-black dark:text-white'
-                    : 'text-custom-mediumGray dark:text-custom-darkTextMuted hover:text-custom-black dark:hover:text-white'
-                  }`}
+                  to={link.page === 'home' ? '/' : `/${link.page}`}
+                  className={({ isActive }) => 
+                    `text-sm font-medium transition-all duration-300 relative group ${
+                      isActive
+                        ? 'text-custom-black dark:text-white'
+                        : 'text-custom-mediumGray dark:text-custom-darkTextMuted hover:text-custom-black dark:hover:text-white'
+                    }`
+                  }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300 group-hover:w-full ${currentPage === link.page ? 'w-full' : ''}`}></span>
-                </button>
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300 group-hover:w-full`}></span>
+                </NavLink>
               ))}
             </nav>
 
@@ -135,13 +149,14 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate, onSubsc
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-40 bg-white dark:bg-custom-darkBg transition-opacity duration-300 md:hidden flex flex-col justify-center items-center space-y-8 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         {navLinks.map((link, index) => (
-          <button
+          <NavLink
             key={`${link.name}-${index}-mobile`}
-            onClick={() => handleNavClick(link.page)}
+            to={link.page === 'home' ? '/' : `/${link.page}`}
+            onClick={() => setIsMobileMenuOpen(false)}
             className="text-2xl font-light text-custom-black dark:text-white active:scale-95 transition-transform"
           >
             {link.name}
-          </button>
+          </NavLink>
         ))}
         <Button variant="primary" onClick={handleSubscribeClick}>Subscribe Now</Button>
       </div>

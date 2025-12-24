@@ -1,14 +1,11 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../UI/Button';
 import { ArrowDown } from 'lucide-react';
-import { Page } from '../../types';
 
-interface HeroProps {
-  onNavigate?: (page: Page) => void;
-}
-
-export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
+export const Hero: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-screen md:min-h-0 lg:min-h-screen flex items-center md:items-start lg:items-center justify-center pt-20 md:pt-32 md:pb-24 lg:pt-20 lg:pb-0 overflow-hidden bg-custom-lightGray dark:bg-custom-darkBg transition-colors duration-500">
       {/* Background Ambience */}
@@ -43,14 +40,14 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           <div className="flex flex-col sm:flex-row gap-4 items-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <Button 
               className="h-12 px-8"
-              onClick={() => onNavigate && onNavigate('blog')}
+              onClick={() => navigate('/blogs')}
             >
               Start Reading
             </Button>
             <Button 
               variant="ghost" 
               className="h-12 px-8"
-              onClick={() => onNavigate && onNavigate('about')}
+              onClick={() => navigate('/about')}
             >
               Our Mission
             </Button>

@@ -1,14 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../../constants';
 import { sanityService } from '../../services/sanity';
 import { BlogPost } from '../../types';
 import { Newspaper, Wrench, Cpu, BookOpen, TrendingUp, BrainCircuit, ArrowRight, Loader2 } from 'lucide-react';
-import { Page } from '../../types';
-
-interface TopicsProps {
-  onNavigate: (page: Page, category?: string) => void;
-}
 
 const iconMap = {
   'newspaper': Newspaper,
@@ -28,7 +24,8 @@ const descriptionMap: Record<string, string> = {
   'AI Thoughts': 'Philosophical dives into ethics, safety, and the human impact of AI.',
 };
 
-export const Topics: React.FC<TopicsProps> = ({ onNavigate }) => {
+export const Topics: React.FC = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -86,7 +83,7 @@ export const Topics: React.FC<TopicsProps> = ({ onNavigate }) => {
           return (
             <button
               key={category.id}
-              onClick={() => onNavigate('blog', category.name)}
+              onClick={() => navigate(`/blogs?category=${encodeURIComponent(category.name)}`)}
               className="group flex flex-col items-start p-8 bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-3xl transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-black/20 hover:-translate-y-1 text-left w-full relative overflow-hidden"
             >
               {/* Background Decoration */}

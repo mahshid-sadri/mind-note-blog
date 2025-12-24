@@ -8,11 +8,7 @@ import { Button } from '../UI/Button';
 import { BlogCard } from '../UI/BlogCard';
 import { Newsletter } from '../Sections/Newsletter';
 
-interface BlogPostProps {
-  onPostClick: (postId: string) => void;
-}
-
-export const BlogPost: React.FC<BlogPostProps> = ({ onPostClick }) => {
+export const BlogPost: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
 
@@ -20,14 +16,14 @@ export const BlogPost: React.FC<BlogPostProps> = ({ onPostClick }) => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-custom-darkBg">
         <h2 className="text-2xl font-semibold mb-4 text-custom-black dark:text-white">Post ID is required</h2>
-        <Button onClick={() => navigate('/blog')}>Back to Blog</Button>
+        <Button onClick={() => navigate('/blogs')}>Back to Blog</Button>
       </div>
     );
   }
 
   const handleBack = () => {
     window.scrollTo(0, 0);
-    navigate('/blog');
+    navigate('/blogs');
   };
   const [post, setPost] = useState<BlogPostType | undefined>(undefined);
   const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
@@ -300,7 +296,6 @@ export const BlogPost: React.FC<BlogPostProps> = ({ onPostClick }) => {
             <BlogCard 
               key={relatedPost.id} 
               post={relatedPost} 
-              onClick={onPostClick} 
             />
           ))}
         </div>

@@ -5,15 +5,10 @@ import { FeaturedArticles } from '../Sections/FeaturedArticles';
 import { Categories } from '../Sections/Categories';
 import { LatestPosts } from '../Sections/LatestPosts';
 import { Newsletter } from '../Sections/Newsletter';
-import { Page, BlogPost } from '../../types';
+import { BlogPost } from '../../types';
 import { sanityService } from '../../services/sanity';
 
-interface HomeProps {
-  onNavigate: (page: Page, category?: string) => void;
-  onPostClick: (postId: string) => void;
-}
-
-export const Home: React.FC<HomeProps> = ({ onNavigate, onPostClick }) => {
+export const Home: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);
   const [latestPosts, setLatestPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,18 +34,15 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onPostClick }) => {
 
   return (
     <>
-      <Hero onNavigate={onNavigate} />
+      <Hero />
       <FeaturedArticles 
         posts={featuredPosts} 
         loading={loading} 
-        onPostClick={onPostClick} 
       />
-      <Categories onNavigate={onNavigate} />
+      <Categories />
       <LatestPosts 
         posts={latestPosts} 
         loading={loading} 
-        onNavigate={onNavigate} 
-        onPostClick={onPostClick} 
       />
       <Newsletter />
     </>

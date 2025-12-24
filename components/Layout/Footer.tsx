@@ -2,13 +2,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Twitter, Github, Linkedin, ArrowUpRight, Mail } from 'lucide-react';
-import { Page } from '../../types';
 
-interface FooterProps {
-  onNavigate: (page: Page, category?: string) => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+export const Footer: React.FC = () => {
   const navigate = useNavigate();
   return (
     <footer className="bg-white dark:bg-custom-darkBg border-t border-custom-border dark:border-custom-borderDark pt-20 pb-10 transition-colors duration-500">
@@ -16,7 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
           
           <div className="max-w-sm">
-             <button onClick={() => onNavigate('home')} className="text-2xl font-bold tracking-tighter text-custom-black dark:text-white mb-6 block text-left">
+             <button onClick={() => navigate('/')} className="text-2xl font-bold tracking-tighter text-custom-black dark:text-white mb-6 block text-left">
               Mind<span className="font-light text-custom-mediumGray">Note</span>.
             </button>
             <p className="text-custom-mediumGray dark:text-custom-darkTextMuted text-sm leading-relaxed mb-6">
@@ -28,18 +23,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <div>
               <h4 className="font-medium text-custom-black dark:text-white mb-6">Read</h4>
               <ul className="space-y-4 text-sm text-custom-mediumGray dark:text-custom-darkTextMuted">
-                <li><button onClick={() => onNavigate('blog')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Blog</button></li>
-                <li><button onClick={() => onNavigate('blog', 'Tutorials')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Tutorials</button></li>
-                <li><button onClick={() => onNavigate('blog', 'AI News')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">News</button></li>
+                <li><button onClick={() => navigate('/blogs')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Blog</button></li>
+                <li><button onClick={() => navigate('/blogs?category=Tutorials')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Tutorials</button></li>
+                <li><button onClick={() => navigate('/blogs?category=AI%20News')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">News</button></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-medium text-custom-black dark:text-white mb-6">Company</h4>
               <ul className="space-y-4 text-sm text-custom-mediumGray dark:text-custom-darkTextMuted">
-                <li><button onClick={() => onNavigate('about')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">About</button></li>
-                <li><button onClick={() => onNavigate('privacy')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Privacy Policy</button></li>
-                <li><button onClick={() => onNavigate('terms')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Terms & Conditions</button></li>
+                <li><button onClick={() => navigate('/about')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">About</button></li>
+                <li><button onClick={() => navigate('/privacy')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Privacy Policy</button></li>
+                <li><button onClick={() => navigate('/terms')} className="block w-full text-left hover:text-custom-black dark:hover:text-white transition-colors">Terms & Conditions</button></li>
               </ul>
             </div>
             

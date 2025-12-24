@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { CATEGORIES } from '../../constants';
 import { sanityService } from '../../services/sanity';
 import { BlogPost } from '../../types';
@@ -7,19 +7,14 @@ import { BlogCard } from '../UI/BlogCard';
 import { Search, LayoutGrid, List, ArrowUpDown, ChevronDown, ChevronLeft, ChevronRight, X, RotateCcw, Filter, Check, Loader2 } from 'lucide-react';
 import { Newsletter } from '../Sections/Newsletter';
 
-interface BlogProps {
-  onPostClick: (postId: string) => void;
-}
-
 type SortOrder = 'newest' | 'oldest';
 type ViewMode = 'grid' | 'list';
 type ReadTimeFilter = 'All' | 'short' | 'medium' | 'long';
 
 const POSTS_PER_PAGE = 6;
 
-export const Blog: React.FC<BlogProps> = ({ onPostClick }) => {
+export const Blog: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   
   // --- STATE INITIALIZATION (with LocalStorage) ---
   
@@ -81,7 +76,7 @@ export const Blog: React.FC<BlogProps> = ({ onPostClick }) => {
 
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
 
   // --- EFFECTS ---
 
@@ -118,8 +113,15 @@ export const Blog: React.FC<BlogProps> = ({ onPostClick }) => {
   useEffect(() => localStorage.setItem('blog_readTimeFilter', readTimeFilter), [readTimeFilter]);
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [activeCategory, searchQuery, yearFilter, readTimeFilter]);
+    const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
+    if (activeCategory && activeCategory !== 'All') {
+      params.set('category', encodeURIComponent(activeCategory));
+    } else {
+      params.delete('category');
+    }
+    setSearchParams(params);
+  }, [activeCategory]);
 
   // --- LOGIC ---
 
@@ -129,13 +131,13 @@ export const Blog: React.FC<BlogProps> = ({ onPostClick }) => {
     setSortOrder('newest');
     setYearFilter('All');
     setReadTimeFilter('All');
-    setCurrentPage(1);
     
     localStorage.removeItem('blog_activeCategory');
     localStorage.removeItem('blog_searchQuery');
     localStorage.removeItem('blog_sortOrder');
     localStorage.removeItem('blog_yearFilter');
     localStorage.removeItem('blog_readTimeFilter');
+    setSearchParams(new URLSearchParams());
   };
 
   const availableYears = useMemo(() => {
@@ -188,7 +190,14 @@ export const Blog: React.FC<BlogProps> = ({ onPostClick }) => {
   const endItem = Math.min(currentPage * POSTS_PER_PAGE, totalItems);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+    if (activeCategory && activeCategory !== 'All') {
+      params.set('category', encodeURIComponent(activeCategory));
+    } else {
+      params.delete('category');
+    }
+    setSearchParams(params);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

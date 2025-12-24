@@ -1,14 +1,11 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../UI/Button';
 import { Twitter, Github, Linkedin, Mail, MapPin } from 'lucide-react';
-import { Page } from '../../types';
 
-interface AboutProps {
-  onNavigate: (page: Page) => void;
-}
-
-export const About: React.FC<AboutProps> = ({ onNavigate }) => {
+export const About: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in">
       {/* Intro Section */}
@@ -33,7 +30,7 @@ export const About: React.FC<AboutProps> = ({ onNavigate }) => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center">
-            <Button onClick={() => onNavigate('blog')}>Read my writing</Button>
+            <Button onClick={() => navigate('/blogs')}>Read my writing</Button>
             <div className="flex gap-2 items-center px-4">
               <a 
                 href="https://x.com/MahshidSadri50" 

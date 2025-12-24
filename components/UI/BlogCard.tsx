@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BlogPost } from '../../types';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -6,27 +7,15 @@ interface BlogCardProps {
   post: BlogPost;
   featured?: boolean;
   minimal?: boolean;
-  onClick?: (postId: string) => void;
 }
-
-export const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false, minimal = false, onClick }) => {
-  const handleClick = (e: React.MouseEvent) => {
-    if (onClick) {
-      e.preventDefault();
-      onClick(post.id);
-    }
-  };
 
   if (minimal) {
     return (
-      <article 
-        onClick={handleClick}
-        className="group cursor-pointer flex gap-6 items-start p-4 -mx-4 rounded-2xl transition-all duration-300 hover:bg-gray-50 dark:hover:bg-white/5"
-      >
+      <Link to={`/blogs/${post.id}`} className="group cursor-pointer flex gap-6 items-start p-4 -mx-4 rounded-2xl transition-all duration-300 hover:bg-gray-50 dark:hover:bg-white/5">
         <div className="w-24 h-24 sm:w-32 sm:h-24 flex-shrink-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
-          <img 
-            src={post.imageUrl} 
-            alt={post.title} 
+          <img
+            src={post.imageUrl}
+            alt={post.title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 grayscale-[10%] group-hover:grayscale-0"
           />
         </div>
@@ -44,19 +33,16 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false, mini
             {post.title}
           </h3>
         </div>
-      </article>
+      </Link>
     );
   }
 
   return (
-    <article 
-      onClick={handleClick}
-      className={`group flex flex-col h-full cursor-pointer ${featured ? '' : ''}`}
-    >
+    <Link to={`/blogs/${post.id}`} className={`group flex flex-col h-full cursor-pointer ${featured ? '' : ''}`}>
       <div className={`relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800 mb-6 ${featured ? 'aspect-[16/9]' : 'aspect-[4/3]'} shadow-sm transition-all duration-500 hover:shadow-md`}>
-        <img 
-          src={post.imageUrl} 
-          alt={post.title} 
+        <img
+          src={post.imageUrl}
+          alt={post.title}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
@@ -87,6 +73,6 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false, mini
           {post.excerpt}
         </p>
       </div>
-    </article>
+    </Link>
   );
 };

@@ -1,18 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { sanityService } from '../../services/sanity';
 import { BlogCard } from '../UI/BlogCard';
 import { BlogPost } from '../../types';
 import { Bookmark, Loader2 } from 'lucide-react';
 import { Button } from '../UI/Button';
-import { Page } from '../../types';
 
-interface SavedProps {
-  onPostClick: (postId: string) => void;
-  onNavigate: (page: Page) => void;
-}
-
-export const Saved: React.FC<SavedProps> = ({ onPostClick, onNavigate }) => {
+export const Saved: React.FC = () => {
+  const navigate = useNavigate();
   const [savedPosts, setSavedPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -64,7 +60,6 @@ export const Saved: React.FC<SavedProps> = ({ onPostClick, onNavigate }) => {
             <div key={post.id} className="animate-fade-in-up">
               <BlogCard 
                 post={post} 
-                onClick={onPostClick} 
               />
             </div>
           ))}
@@ -78,7 +73,7 @@ export const Saved: React.FC<SavedProps> = ({ onPostClick, onNavigate }) => {
           <p className="text-custom-mediumGray dark:text-custom-darkTextMuted mb-8 text-center max-w-sm">
             When you find an article you like, tap the bookmark icon to save it here for later.
           </p>
-          <Button onClick={() => onNavigate('blog')}>
+          <Button onClick={() => navigate('/blogs')}>
             Browse Articles
           </Button>
         </div>

@@ -1,11 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../../constants';
 import { Newspaper, Wrench, Cpu, BookOpen, TrendingUp, BrainCircuit, ArrowRight } from 'lucide-react';
-import { Page } from '../../types';
-
-interface CategoriesProps {
-  onNavigate?: (page: Page, category?: string) => void;
-}
 
 const iconMap = {
   'newspaper': Newspaper,
@@ -16,7 +12,8 @@ const iconMap = {
   'brain-circuit': BrainCircuit,
 };
 
-export const Categories: React.FC<CategoriesProps> = ({ onNavigate }) => {
+export const Categories: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <section id="topics" className="py-24 bg-custom-lightGray dark:bg-[#0E0E10] transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,9 +25,9 @@ export const Categories: React.FC<CategoriesProps> = ({ onNavigate }) => {
           {CATEGORIES.map((category) => {
             const Icon = iconMap[category.iconName];
             return (
-              <button 
-                key={category.id} 
-                onClick={() => onNavigate && onNavigate('blog', category.name)}
+              <button
+                key={category.id}
+                onClick={() => navigate(`/blogs?category=${encodeURIComponent(category.name)}`)}
                 className="group relative flex items-start p-8 bg-white dark:bg-white/5 rounded-3xl transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-black/20 hover:-translate-y-1 w-full text-left"
               >
                 <div className="flex-1">

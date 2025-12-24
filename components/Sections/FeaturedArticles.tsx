@@ -6,10 +6,9 @@ import { BlogPost } from '../../types';
 interface FeaturedArticlesProps {
   posts: BlogPost[];
   loading: boolean;
-  onPostClick?: (postId: string) => void;
 }
 
-export const FeaturedArticles: React.FC<FeaturedArticlesProps> = ({ posts, loading, onPostClick }) => {
+export const FeaturedArticles: React.FC<FeaturedArticlesProps> = ({ posts, loading }) => {
   const mainPost = posts[0];
   const sidePosts = posts.slice(1, 3);
 
@@ -64,13 +63,13 @@ export const FeaturedArticles: React.FC<FeaturedArticlesProps> = ({ posts, loadi
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Main Featured Post - Left Side */}
           <div className="lg:col-span-7">
-            <BlogCard post={mainPost} featured onClick={onPostClick} />
+            <BlogCard post={mainPost} featured />
           </div>
 
           {/* Secondary Posts - Right Side (Stacked) */}
           <div className="lg:col-span-5 flex flex-col gap-10">
             {sidePosts.map((post) => (
-              <BlogCard key={post.id} post={post} onClick={onPostClick} />
+              <BlogCard key={post.id} post={post} />
             ))}
           </div>
         </div>

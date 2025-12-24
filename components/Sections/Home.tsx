@@ -5,18 +5,13 @@ import { Categories } from '../Sections/Categories';
 import { LatestPosts } from '../Sections/LatestPosts';
 import { Newsletter } from '../Sections/Newsletter';
 
-interface HomeProps {
-  onNavigate: (page: 'home' | 'blog' | 'topics' | 'about') => void;
-  onPostClick: (postId: string) => void;
-}
-
-export const Home: React.FC<HomeProps> = ({ onNavigate, onPostClick }) => {
+export const Home: React.FC = () => {
   return (
     <>
       <Hero />
-      <FeaturedArticles onPostClick={onPostClick} />
+      <FeaturedArticles />
       <Categories />
-      <LatestPosts onNavigate={onNavigate} onPostClick={onPostClick} />
+      <LatestPosts />
       <Newsletter />
     </>
   );
