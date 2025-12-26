@@ -52,6 +52,8 @@ export const Header: React.FC = () => {
   const handleNavClick = (page: Page) => {
     if (page === 'home') {
       navigate('/');
+    } else if (page === 'blog') {
+      navigate('/blogs');
     } else {
       navigate(`/${page}`);
     }

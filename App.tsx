@@ -29,6 +29,10 @@ const AppContent: React.FC = () => {
             element={<Home />} 
           />
           <Route 
+            path="/blog" 
+            element={<Blog />} 
+          />
+          <Route 
             path="/blogs" 
             element={<Blog />} 
           />

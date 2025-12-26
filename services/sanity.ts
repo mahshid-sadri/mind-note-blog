@@ -107,9 +107,15 @@ export const sanityService = {
         featured: p.isEditorsChoice || false,
         content: p.body ? JSON.stringify(p.body) : undefined, // Store Portable Text as JSON string
       }));
-    } catch (error) {
-      console.error("Sanity Fetch Error:", error);
-      // Return fallback data on error
+    } catch (error: any) {
+      // Handle CORS and other errors gracefully
+      const errorMessage = error?.message || String(error);
+      if (errorMessage.includes('CORS') || errorMessage.includes('Access-Control-Allow-Origin')) {
+        console.warn("Sanity CORS Error: Your domain needs to be added to Sanity CORS settings. Using fallback data.");
+      } else {
+        console.error("Sanity Fetch Error:", error);
+      }
+      // Always return fallback data on error
       return ALL_POSTS;
     }
   },
@@ -148,8 +154,13 @@ export const sanityService = {
         featured: p.isEditorsChoice || false,
         content: JSON.stringify(p.body),
       };
-    } catch (error) {
-      console.error("Sanity Fetch Error (Single Post):", error);
+    } catch (error: any) {
+      const errorMessage = error?.message || String(error);
+      if (errorMessage.includes('CORS') || errorMessage.includes('Access-Control-Allow-Origin')) {
+        console.warn("Sanity CORS Error: Using fallback data.");
+      } else {
+        console.error("Sanity Fetch Error (Single Post):", error);
+      }
       // Fallback to example data
       return ALL_POSTS.find((post) => post.id === id);
     }
@@ -189,8 +200,13 @@ export const sanityService = {
         featured: true,
         content: JSON.stringify(p.body),
       }));
-    } catch (error) {
-      console.error("Sanity Fetch Error (Featured Posts):", error);
+    } catch (error: any) {
+      const errorMessage = error?.message || String(error);
+      if (errorMessage.includes('CORS') || errorMessage.includes('Access-Control-Allow-Origin')) {
+        console.warn("Sanity CORS Error (Featured Posts): Using fallback data.");
+      } else {
+        console.error("Sanity Fetch Error (Featured Posts):", error);
+      }
       return ALL_POSTS.slice(0, 3);
     }
   },
