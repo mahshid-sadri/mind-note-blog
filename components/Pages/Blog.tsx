@@ -86,9 +86,14 @@ export const Blog: React.FC = () => {
       setIsLoading(true);
       try {
         const posts = await sanityService.getAllPosts();
+        console.log("Loaded posts:", posts.length, posts);
         setAllPosts(posts);
       } catch (error) {
         console.error("Failed to load blog posts", error);
+        // Ensure we have fallback data even if there's an error
+        const { ALL_POSTS } = await import('../../constants');
+        console.log("Using fallback posts:", ALL_POSTS.length);
+        setAllPosts(ALL_POSTS);
       } finally {
         setIsLoading(false);
       }
@@ -141,7 +146,18 @@ export const Blog: React.FC = () => {
   };
 
   const availableYears = useMemo(() => {
-    const years = new Set(allPosts.map(post => new Date(post.date).getFullYear()));
+    const years = new Set(
+      allPosts
+        .map(post => {
+          try {
+            const date = new Date(post.date);
+            return isNaN(date.getTime()) ? null : date.getFullYear();
+          } catch {
+            return null;
+          }
+        })
+        .filter((year): year is number => year !== null)
+    );
     return Array.from(years).sort((a: number, b: number) => b - a);
   }, [allPosts]);
 
@@ -155,8 +171,17 @@ export const Blog: React.FC = () => {
                             post.excerpt.toLowerCase().includes(searchLower) ||
                             post.category.toLowerCase().includes(searchLower);
 
-      const postYear = new Date(post.date).getFullYear().toString();
-      const matchesYear = yearFilter === 'All' || postYear === yearFilter;
+      // Safe date parsing
+      let postYear = '';
+      try {
+        const date = new Date(post.date);
+        if (!isNaN(date.getTime())) {
+          postYear = date.getFullYear().toString();
+        }
+      } catch (e) {
+        // If date parsing fails, skip year filter
+      }
+      const matchesYear = yearFilter === 'All' || !postYear || postYear === yearFilter;
 
       // Extract minutes from "X min read" format
       const minutesMatch = post.readTime.match(/(\d+)/);
@@ -185,6 +210,22 @@ export const Blog: React.FC = () => {
     (currentPage - 1) * POSTS_PER_PAGE,
     currentPage * POSTS_PER_PAGE
   );
+
+  // Debug logging
+  useEffect(() => {
+    console.log("Blog Debug:", {
+      allPostsCount: allPosts.length,
+      processedPostsCount: processedPosts.length,
+      paginatedPostsCount: paginatedPosts.length,
+      activeCategory,
+      searchQuery,
+      yearFilter,
+      readTimeFilter,
+      sortOrder,
+      currentPage,
+      totalPages
+    });
+  }, [allPosts.length, processedPosts.length, paginatedPosts.length, activeCategory, searchQuery, yearFilter, readTimeFilter, sortOrder, currentPage, totalPages]);
 
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * POSTS_PER_PAGE + 1;
   const endItem = Math.min(currentPage * POSTS_PER_PAGE, totalItems);
@@ -429,6 +470,18 @@ export const Blog: React.FC = () => {
           <div className="flex justify-center items-center min-h-[400px]">
             <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
           </div>
+        ) : allPosts.length === 0 ? (
+          <div className="flex flex-col justify-center items-center min-h-[400px] text-center">
+            <p className="text-custom-mediumGray dark:text-custom-darkTextMuted text-lg mb-4">
+              No blog posts available. Please check your connection or try again later.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-custom-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-opacity text-sm font-medium"
+            >
+              Refresh Page
+            </button>
+          </div>
         ) : (
           <div className={`
             ${viewMode === 'grid' 
@@ -449,6 +502,9 @@ export const Blog: React.FC = () => {
               <div className="col-span-full text-center py-20">
                 <p className="text-custom-mediumGray dark:text-custom-darkTextMuted text-lg mb-4">
                   No articles found matching your criteria.
+                </p>
+                <p className="text-sm text-custom-mediumGray dark:text-custom-darkTextMuted mb-4">
+                  Total posts: {allPosts.length} | Filtered: {processedPosts.length}
                 </p>
                 <button 
                   onClick={handleResetFilters}
